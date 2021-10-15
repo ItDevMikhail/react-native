@@ -1,28 +1,57 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, Button, View } from "react-native";
+import React from "react";
+import { View, Text, Button, StyleSheet, TextInput } from "react-native";
+import { gStyle } from "../styles/style";
+import { Formik } from "formik";
 
-export default function Form({ addHandler }) {
-    const [text, setText] = useState('');
 
-    const onChange = (text) => {
-        setText(text);
-    }
+export default function Form({ addArticle }) {
+
 
     return (
-        <View>
-            <TextInput style={styles.input} onChangeText={onChange} placeholder='Впишите задачу' />
-            <Button title='Добавит задачу' color='green' onPress={() => { addHandler(text) }} />
+        <View >
+            <Formik initialValues={{ name: '', anons: '', full: '', img: '' }} onSubmit={(values, action) => {
+                console.log(values);
+                addArticle(values);
+                action.resetForm();
+            }}>
+                {(props) => (
+                    <View>
+                        <TextInput
+                            style={styles.input}
+                            value={props.values.name}
+                            placeholder='Введите название статьи'
+                            onChangeText={props.handleChange('name')} />
+                        <TextInput
+                            style={styles.input}
+                            value={props.values.anons}
+                            multiline
+                            placeholder='Введите анонс'
+                            onChangeText={props.handleChange('anons')} />
+                        <TextInput
+                            style={styles.input}
+                            value={props.values.full}
+                            multiline
+                            placeholder='Введите статью'
+                            onChangeText={props.handleChange('full')} />
+                        <TextInput
+                            style={styles.input}
+                            value={props.values.img}
+                            placeholder='Укажите фото'
+                            onChangeText={props.handleChange('img')} />
+                        <Button title='Добавить' onPress={props.handleSubmit} />
+                    </View>
+                )}
+            </Formik>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     input: {
-        borderBottomWidth: 1,
-        borderColor: '#000',
-        padding: 10,
-        marginVertical: 30,
-        marginHorizontal: '20%',
-        width: '60%'
+        borderWidth: 1,
+        marginTop: 15,
+        padding: 15,
+        borderColor: "silver",
+        borderRadius: 5
     }
-});
+})
